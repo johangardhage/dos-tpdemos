@@ -1,0 +1,21 @@
+@echo off
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo01.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo02.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo03.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo04.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo05.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo06.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo07.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo08.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo09.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo10.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo11.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo12.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo13.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo14.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo15.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo16.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo17.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo18.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo19.pas
+tpc -$G+ -B -Usrc\lib -Iassets -Ebuild src\demo20.pas
