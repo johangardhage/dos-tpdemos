@@ -2,58 +2,65 @@
 
 Retro programming in Borland Turbo Pascal 7
 
-![Screenshot](/screenshots/tp.png "Turbo Pascal IDE")
+![Screenshot](/screenshots/tp.png "Borland Turbo Pascal IDE")
 
 ## Prerequisites
 
 To build and run the Borland Turbo Pascal demos, you must first install the following tools:
 
-- [DOSBox](https://www.dosbox.com/download.php)
+- [DOSBox Staging](https://www.dosbox-staging.org/)
 - [Borland Turbo Pascal](https://winworldpc.com/product/turbo-pascal/7x)
 
-### Install DOSBox
-
-#### openSUSE
-
-`$ sudo zypper install dosbox mtools p7zip-full`
+### Install DOSBox Staging
 
 #### Ubuntu
 
-`$ sudo apt install dosbox mtools p7zip-full`
+```
+$ sudo add-apt-repository ppa:feignint/dosbox-staging
+$ sudo apt update
+$ sudo apt install dosbox-staging 7zip
+```
+
+#### macOS
+
+```
+$ brew install dosbox-staging sevenzip
+```
 
 #### Configuration
 
-When starting `dosbox` the first time, the configuration file `~/.dosbox/dosbox-0.74-2.conf` will be generated
+When starting `dosbox-staging` the first time, the configuration file `dosbox-staging.conf` will be generated in
+
+- Ubuntu: `~/.config/dosbox/dosbox-staging.conf`
+- macOS: `~/Library/Preferences/DOSBox/dosbox-staging.conf`
 
 ### Install Borland Turbo Pascal
 
-1. Download `Borland Turbo Pascal 7.1 (3.5).7z`
-
-1. Create a directory which will contain the DOS C: drive
+1. Download [Borland Turbo Pascal 7.01 (3.5-720k).7z](https://dl.winworldpc.com/Borland%20Turbo%20Pascal%207.01%20(3.5-720k).7z)
    ```
-   $ mkdir ~/DOSBox
+   $ curl -o "Borland Turbo Pascal 7.01 (3.5-720k).7z" "https://dl.winworldpc.com/Borland%20Turbo%20Pascal%207.01%20(3.5-720k).7z"
    ```
 
-1. Extract the downloaded Turbo Pascal archive
+1. Extract the downloaded Borland Turbo Pascal archive
    ```
-   $ 7z x "Borland Turbo Pascal 7.1 (3.5).7z"
+   $ 7zz x "Borland Turbo Pascal 7.01 (3.5-720k).7z"
    ```
 
 1. Extract the Borland Turbo Pascal disk images
    ```
-   $ cd "Borland Turbo Pascal 7.1 (3.5)"/
-   $ mkdir tpsetup
-   $ for i in *.img; do echo $i; mcopy -m -i $i :: tpsetup; done
+   $ cd "Borland Turbo Pascal 7.01 (3.5-720k)"/
+   $ for i in *.img; do echo $i; 7zz x -y -otpsetup $i; done
    ```
 
 1. Move the extracted files to the DOS C: drive
    ```
+   $ mkdir -p ~/DOSBox
    $ mv tpsetup ~/DOSBox/
    ```
 
-1. Configure DOSBox
+1. Configure DOSBox Staging
 
-   Edit `~/.dosbox/dosbox-0.74-2.conf` and add the following autoexec options
+   Edit `dosbox-staging.conf` (see [Configuration](#configuration)) and add the following autoexec options
    ```
    [autoexec]
    mount c ~/DOSBox
@@ -61,9 +68,15 @@ When starting `dosbox` the first time, the configuration file `~/.dosbox/dosbox-
    c:
    ```
 
-1. Start `dosbox`and execute the Borland Turbo Pascal installation program
+   The default CPU speed (`cpu_cycles = 3000`) is too slow for the demos. In the `[cpu]` section, change it to
    ```
-   $ dosbox
+   [cpu]
+   cpu_cycles = max
+   ```
+
+1. Start `dosbox-staging` and execute the Borland Turbo Pascal installation program
+   ```
+   $ dosbox-staging
    C:\> cd tpsetup
    C:\TPSETUP> install.exe
    ```
@@ -79,7 +92,7 @@ When starting `dosbox` the first time, the configuration file `~/.dosbox/dosbox-
 
 Link the `dos-tpdemos` git repository to the DOS C: drive
 ```
-$ ln -s ~/git/github/dos-tpdemos ~/DOSBox/tpdemos
+$ ln -s ~/git/dos-tpdemos ~/DOSBox/tpdemos
 ```
 
 #### Build demos from DOS terminal
