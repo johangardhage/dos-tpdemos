@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       rxst=2; ryst=2; rzst=2;
@@ -93,12 +93,13 @@ begin
       putpixel(dotxp,dotyp,dotcolortable[dotzp],vaddr);
     end;
 
-    rphix:=rphix+rxst; if rphix<0 then rphix:=rphix+359 else if rphix>359 then rphix:=rphix-359;
-    rphiy:=rphiy+ryst; if rphiy<0 then rphiy:=rphiy+359 else if rphiy>359 then rphiy:=rphiy-359;
-    rphiz:=rphiz+rzst; if rphiz<0 then rphiz:=rphiz+359 else if rphiz>359 then rphiz:=rphiz-359;
+    rphix:=rphix+rxst; if rphix<0 then rphix:=rphix+360 else if rphix>=360 then rphix:=rphix-360;
+    rphiy:=rphiy+ryst; if rphiy<0 then rphiy:=rphiy+360 else if rphiy>=360 then rphiy:=rphiy-360;
+    rphiz:=rphiz+rzst; if rphiz<0 then rphiz:=rphiz+360 else if rphiz>=360 then rphiz:=rphiz-360;
 end;
 
-Procedure RealMorph;
+Function RealMorph:boolean;
+{ Returns true if a key was hit during the morph }
 Var Loop1, Loop2: Integer;
 Begin
   For Loop1 := 1 to MaxPoints Do
@@ -115,10 +116,11 @@ Begin
       Dec(RealObj[Loop2].y,MorphData[Loop2].y);
       Dec(RealObj[Loop2].z,MorphData[Loop2].z);
     End;
-    if keypressed then exit;
+    if keyhit then begin RealMorph:=true; exit; end;
     swapdisplay;
     DoAllPoints;
   End;
+  RealMorph:=false;
 End;
 
 procedure mainloop;
@@ -130,22 +132,22 @@ begin
     if border then setborder(50);
 
     for loop1:=1 to 300 do begin
-      if keypressed then exit;
+      if keyhit then exit;
       swapdisplay;
       DoAllPoints;
     end;
     Createtri(tempobj);
-    realmorph;
+    if realmorph then exit;
     for loop1:=1 to 300 do begin
-      if keypressed then exit;
+      if keyhit then exit;
       swapdisplay;
       DoAllPoints;
     end;
     Createbox(tempobj);
-    realmorph;
+    if realmorph then exit;
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 begin

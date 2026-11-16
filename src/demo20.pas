@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       xst=1; yst=1; zst=1;
@@ -107,7 +107,7 @@ begin
       x:=points[loop1,1]; y:=points[loop1,2]; z:=points[loop1,3];
       rotate(x,y,z,phix,phiy,phiz,newx,newy,newz);
       conv3dto2d(newx,newy,newz,xp[loop1],yp[loop1]);
-      dec(yp[loop1],8); { compensate for bitmap }
+      dec(xp[loop1],8); dec(yp[loop1],8); { compensate for bitmap }
       zp[loop1]:=newz;
     end;
 
@@ -124,14 +124,14 @@ begin
       drawsprite(xp[pointind[loop1]],yp[pointind[loop1]],16,addr(SprPic),vaddr);
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 var loop1:integer;
 begin
   setmcga;
   setupvirtual;
-  for loop1:=1 to 10 do pal(loop1,loop1+10,loop1+10 shr 2,loop1+10);
+  for loop1:=1 to 10 do pal(loop1,loop1+10,(loop1+10) shr 2,loop1+10);
   mainloop;
   shutdownvirtual;
   settext;

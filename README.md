@@ -68,10 +68,17 @@ When starting `dosbox-staging` the first time, the configuration file `dosbox-st
    c:
    ```
 
-   The default CPU speed (`cpu_cycles = 3000`) is too slow for the demos. In the `[cpu]` section, change it to
+   To run the demos at about the speed of a 486 DX2-66, set the following settings
    ```
+   [dosbox]
+   machine = svga_paradise
+   vmem_delay = off
+
    [cpu]
-   cpu_cycles = max
+   core = auto
+   cputype = auto
+   cpu_cycles = 50000
+   cpu_throttle = off
    ```
 
 1. Start `dosbox-staging` and execute the Borland Turbo Pascal installation program
@@ -129,6 +136,7 @@ $ ln -s ~/git/dos-tpdemos ~/DOSBox/tpdemos
    Select `Compiler` and the following options
    ```
    [X] 286 instructions
+   [X] 8087/80287
    ```
 
    Select `Environment`, `Preferences` and the following options

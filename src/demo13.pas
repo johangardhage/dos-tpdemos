@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       xst=1; yst=1; zst=1;
@@ -42,7 +42,7 @@ asm
   cmp   bx, 320
   jne   @xloop
   inc   cx              { next y }
-  cmp   cx, 199
+  cmp   cx, 198         { reads two rows down, stay inside the buffer }
   jne   @yloop
 end;
 
@@ -73,7 +73,7 @@ begin
 
     quicksort(maxpolygons);
 
-    for loop1:=maxpolygons-maxvisible to maxpolygons do
+    for loop1:=maxpolygons-maxvisible+1 to maxpolygons do
       draw_quad(xp[polygons[pind[loop1],1]],yp[polygons[pind[loop1],1]],
                 xp[polygons[pind[loop1],2]],yp[polygons[pind[loop1],2]],
                 xp[polygons[pind[loop1],3]],yp[polygons[pind[loop1],3]],
@@ -82,7 +82,7 @@ begin
     firefadeout;
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 var i:integer;

@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       xst=1; yst=1; zst=1;
@@ -43,14 +43,14 @@ begin
 
     quicksort(maxpolygons);
 
-    for loop1:=maxpolygons-maxvisible to maxpolygons do
-      draw4texture(xp[polygons[pind[loop1],1]],yp[polygons[pind[loop1],1]],
+    for loop1:=maxpolygons-maxvisible+1 to maxpolygons do
+      draw_4_texture(xp[polygons[pind[loop1],1]],yp[polygons[pind[loop1],1]],
                    xp[polygons[pind[loop1],2]],yp[polygons[pind[loop1],2]],
                    xp[polygons[pind[loop1],3]],yp[polygons[pind[loop1],3]],
                    xp[polygons[pind[loop1],4]],yp[polygons[pind[loop1],4]],texturedim);
 
    if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 begin

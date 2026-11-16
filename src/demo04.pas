@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       nofcircles=87;
@@ -18,7 +18,7 @@ const border:boolean=false;
       dotmincol=-240;
       dotmaxcol=nofcircles*zstep;
 
-var circle:array[1..256 div astep] of record x,y:word; end;
+var circle:array[1..256 div astep] of record x,y:integer; end;
     zpos:array[1..nofcircles] of integer;
     dotcolor,dotcoloradd:real;
     dotcolortable:array[dotmincol..dotmaxcol] of integer;
@@ -81,7 +81,7 @@ begin
       while angle<256 do begin
         conv3dto2d(circle[i].x,circle[i].y,zpos[j],xp,yp);
         inc(xp,xo); inc(yp,yo);
-        if (xp>0) and (xp<320) and (yp>0) and (yp<200) then
+        if (xp>=0) and (xp<320) and (yp>=0) and (yp<200) then
           putpixel(xp,yp,dotcolortable[zpos[j]],vaddr);
         inc(angle,astep); inc(i);
       end;
@@ -91,7 +91,7 @@ begin
     inc(si,-1);
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 var loop1:integer;
@@ -99,7 +99,7 @@ begin
   initialize;
   setmcga;
   setupvirtual;
-  for loop1:=1 to 64 do pal(loop1,loop1,loop1,loop1);
+  for loop1:=1 to 64 do pal(loop1,loop1-1,loop1-1,loop1-1);
   mainloop;
   shutdownvirtual;
   settext;

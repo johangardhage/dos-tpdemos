@@ -1,6 +1,6 @@
       maxpoints=14;          { max currently at 14 !! }
       maxpolygons=24;        { max currently at 24 !! }
-      maxvisible=11;
+      maxvisible=12;
 
       points:array[1..maxpoints,1..3] of integer=
         ((-50,-50,-50),  { 1	      5----------8 }

@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       rxst=3; ryst=3; rzst=5;
@@ -77,12 +77,12 @@ begin
         putpixel(dotxp,dotyp,dotcolortable[dotzp],vaddr);
     end;
 
-    rphix:=rphix+rxst; if rphix<0 then rphix:=rphix+359 else if rphix>359 then rphix:=rphix-359;
-    rphiy:=rphiy+ryst; if rphiy<0 then rphiy:=rphiy+359 else if rphiy>359 then rphiy:=rphiy-359;
-    rphiz:=rphiz+rzst; if rphiz<0 then rphiz:=rphiz+359 else if rphiz>359 then rphiz:=rphiz-359;
+    rphix:=rphix+rxst; if rphix<0 then rphix:=rphix+360 else if rphix>=360 then rphix:=rphix-360;
+    rphiy:=rphiy+ryst; if rphiy<0 then rphiy:=rphiy+360 else if rphiy>=360 then rphiy:=rphiy-360;
+    rphiz:=rphiz+rzst; if rphiz<0 then rphiz:=rphiz+360 else if rphiz>=360 then rphiz:=rphiz-360;
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 begin

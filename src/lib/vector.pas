@@ -8,7 +8,7 @@ unit vector;
 
 INTERFACE
 
-uses crt,gfx;
+uses gfx;
 
 type textype = record
                  x:integer;
@@ -35,8 +35,8 @@ var cosinus:array[0..maxdegrees] of integer;
     phix,phiy,phiz:integer;
     numvisible:integer;
 { real variables }
-    rcosinus:array[0..359] of real;
-    rsinus:array[0..359] of real;
+    rcosinus:array[0..360] of real;
+    rsinus:array[0..360] of real;
     rx,ry,rz,rnewx,rnewy,rnewz:real;
     rphix,rphiy,rphiz:real;
 { lightsource variables }
@@ -67,7 +67,7 @@ procedure hline_glenz(x1,x2,y:integer;col:byte;where:word);
 procedure draw_tri_glenz(x1,y1,x2,y2,x3,y3:integer;col:byte);
 procedure draw_4_glenz(x1,y1,x2,y2,x3,y3,x4,y4:integer;col:byte);
 procedure hline_texture(x1,x2,px1,py1,px2,py2,y:integer;source,dest:word);
-procedure draw4texture(x1,y1,x2,y2,x3,y3,x4,y4,dim:integer);
+procedure draw_4_texture(x1,y1,x2,y2,x3,y3,x4,y4,dim:integer);
 procedure swap(var a,b:integer);
 procedure quicksort(hi:integer);
 procedure rotate(x,y,z,phix,phiy,phiz:integer;var newx,newy,newz:integer);
@@ -290,10 +290,14 @@ end;
 {****************************************************************************}
 
 procedure hline_texture(x1,x2,px1,py1,px2,py2,y:integer;source,dest:word);
+{ Fills pixels x1..x2-1 on row y with texels from (px1,py1) towards (px2,py2).
+  The span is half-open, so polygons sharing an edge don't both draw it.
+  Nothing is drawn if x2<=x1. }
 var pxval,pxstep,pyval,pystep:integer;
     linewidth:integer;
 begin
-  linewidth:=(x2-x1+1);
+  linewidth:=x2-x1;
+  if linewidth<=0 then exit;
   pxstep:=((px2-px1) shl 8) div linewidth;
   pystep:=((py2-py1) shl 8) div linewidth;
   pxval:=px1 shl 8;
@@ -330,12 +334,12 @@ end;
 
 {****************************************************************************}
 
-procedure draw4texture(x1,y1,x2,y2,x3,y3,x4,y4,dim:integer);
+procedure draw_4_texture(x1,y1,x2,y2,x3,y3,x4,y4,dim:integer);
 var ymin,ymax,xstart,xend,ystart,yend:integer;
     xval,xstep:integer;
     pxstart,pxend,pystart,pyend:integer;
     pxval,pxstep,pyval,pystep:integer;
-    count:integer;
+    count,h:integer;
     side:textableptr;
     left,right:textable;
 begin
@@ -353,10 +357,11 @@ begin
       side := @left;
   end else side := @right;
   xval := xstart shl 8;
-  xstep := ((xend-xstart) shl 8) div (yend-ystart+1);
+  h := yend-ystart; if h=0 then h := 1;
+  xstep := ((xend-xstart) shl 8) div h;
   pxval := pxstart shl 8;
-  pxstep := ((pxend-pxstart) shl 8) div (yend-ystart+1);
-  for count := ystart to yend do begin
+  pxstep := ((pxend-pxstart) shl 8) div h;
+  for count := ystart to yend-1 do begin
       side^[count].x := xval shr 8;
       side^[count].px := pxval shr 8;
       side^[count].py := pystart;
@@ -374,10 +379,11 @@ begin
   end
   else side := @right;
   xval := (xstart) shl 8;
-  xstep := ((xend-xstart) shl 8) div (yend-ystart+1);
+  h := yend-ystart; if h=0 then h := 1;
+  xstep := ((xend-xstart) shl 8) div h;
   pyval := pystart shl 8;
-  pystep := ((pyend-pystart) shl 8) div (yend-ystart+1);
-  for count := ystart to yend do begin
+  pystep := ((pyend-pystart) shl 8) div h;
+  for count := ystart to yend-1 do begin
       side^[count].x := xval shr 8;
       side^[count].py := pyval shr 8;
       side^[count].px := pxstart;
@@ -395,10 +401,11 @@ begin
   end
   else side := @right;
   xval := (xstart) shl 8;
-  xstep := ((xend-xstart) shl 8) div (yend-ystart+1);
+  h := yend-ystart; if h=0 then h := 1;
+  xstep := ((xend-xstart) shl 8) div h;
   pxval := pxstart shl 8;
-  pxstep := ((pxend-pxstart) shl 8) div (yend-ystart+1);
-  for count := ystart to yend do begin
+  pxstep := ((pxend-pxstart) shl 8) div h;
+  for count := ystart to yend-1 do begin
       side^[count].x := xval shr 8;
       side^[count].px := pxval shr 8;
       side^[count].py := pystart;
@@ -416,10 +423,11 @@ begin
   end
   else side := @right;
   xval := (xstart) shl 8;
-  xstep := ((xend-xstart) shl 8) div (yend-ystart+1);
+  h := yend-ystart; if h=0 then h := 1;
+  xstep := ((xend-xstart) shl 8) div h;
   pyval := pystart shl 8;
-  pystep := ((pyend-pystart) shl 8) div (yend-ystart+1);
-  for count := ystart to yend do begin
+  pystep := ((pyend-pystart) shl 8) div h;
+  for count := ystart to yend-1 do begin
       side^[count].x := xval shr 8;
       side^[count].py := pyval shr 8;
       side^[count].px := pxstart;
@@ -427,7 +435,7 @@ begin
       pyval := pyval + pystep;
   end;
 
-  for count := ymin to ymax do
+  for count := ymin to ymax-1 do
     if left[count].x < right[count].x
       then hline_texture(left[count].x, right[count].x,
                          left[count].px, left[count].py,
@@ -568,7 +576,7 @@ begin
 		v:=v+vadd;
 	end;
 
-  for loop1:=0 to 359 do begin
+  for loop1:=0 to 360 do begin
     rcosinus[loop1]:=cos(loop1 * pi / 180);
     rsinus[loop1]:=sin(loop1 * pi / 180);
   end;

@@ -8,13 +8,13 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       speed=3;
       maxstars=1000;
       dotmincol=-200;
-      dotmaxcol=250-speed;
+      dotmaxcol=249;     { highest star z, see mainloop }
 
 var points:array[1..maxstars] of record x,y,z:integer; end;
     xp,yp:array[1..maxstars] of integer;
@@ -58,7 +58,7 @@ begin
       if (xp[loop1]>=0) and (xp[loop1]<=319) and (yp[loop1]>=0) and (yp[loop1]<=199) then
         putpixel(xp[loop1],yp[loop1],dotcolortable[points[loop1].z],vaddr);
     end;
-  until keypressed;
+  until keyhit;
 end;
 
 var loop1:integer;
@@ -66,7 +66,7 @@ begin
   init;
   setmcga;
   setupvirtual;
-  for loop1:=1 to 64 do pal(loop1,loop1,loop1,loop1);
+  for loop1:=1 to 64 do pal(loop1,loop1-1,loop1-1,loop1-1);
   mainloop;
   shutdownvirtual;
   settext;

@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       rxst=0.7; ryst=0.7; rzst=0.7;
@@ -32,9 +32,9 @@ begin
       zp[loop1]:=round(rnewz);
     end;
 
-    rphix:=rphix+rxst; if rphix<0 then rphix:=rphix+359 else if rphix>359 then rphix:=rphix-359;
-    rphiy:=rphiy+ryst; if rphiy<0 then rphiy:=rphiy+359 else if rphiy>359 then rphiy:=rphiy-359;
-    rphiz:=rphiz+rzst; if rphiz<0 then rphiz:=rphiz+359 else if rphiz>359 then rphiz:=rphiz-359;
+    rphix:=rphix+rxst; if rphix<0 then rphix:=rphix+360 else if rphix>=360 then rphix:=rphix-360;
+    rphiy:=rphiy+ryst; if rphiy<0 then rphiy:=rphiy+360 else if rphiy>=360 then rphiy:=rphiy-360;
+    rphiz:=rphiz+rzst; if rphiz<0 then rphiz:=rphiz+360 else if rphiz>=360 then rphiz:=rphiz-360;
 
     for loop1:=1 to maxpolygons do
       if checkvisible(xp[polygons[loop1,1]],yp[polygons[loop1,1]],
@@ -64,14 +64,14 @@ begin
       end;
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 var loop1:integer;
 begin
   setmcga;
   setupvirtual;
-  for loop1:=1 to 255 do pal(loop1,loop1,loop1,loop1);
+  for loop1:=1 to 63 do pal(loop1,loop1,loop1,loop1);
   mainloop;
   shutdownvirtual;
   settext;

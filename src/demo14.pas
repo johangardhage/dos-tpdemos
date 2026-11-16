@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       xst=1; yst=1; zst=1;
@@ -41,20 +41,20 @@ begin
 
     quicksort(maxpolygons);
 
-    for loop1:=maxpolygons-maxvisible to maxpolygons do
+    for loop1:=maxpolygons-maxvisible+1 to maxpolygons do
       draw_tri_gouraud(xp[polygons[pind[loop1],1]],yp[polygons[pind[loop1],1]],
                        xp[polygons[pind[loop1],2]],yp[polygons[pind[loop1],2]],
                        xp[polygons[pind[loop1],3]],yp[polygons[pind[loop1],3]],1,32,63);
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 var loop1:integer;
 begin
   setmcga;
   setupvirtual;
-  for loop1:=1 to 64 do pal(loop1,loop1,loop1,loop1);
+  for loop1:=1 to 64 do pal(loop1,loop1-1,loop1-1,loop1-1);
   mainloop;
   shutdownvirtual;
   settext;

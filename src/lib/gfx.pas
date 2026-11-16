@@ -8,8 +8,6 @@ unit GFX;
 
 INTERFACE
 
-uses crt;
-
 const VGA = $A000;
 
 var vptr : pointer;                       { our virtual screen }
@@ -27,7 +25,8 @@ procedure swapdisplay;
 procedure Pal (Col,R,G,B : Byte);
 procedure GetPal (Col : Byte; var R,G,B : Byte);
 procedure WaitRetrace;
-procedure Hline (x1,x2,y:word;col:byte;where:word);
+function KeyHit:boolean;
+procedure Hline (x1,x2,y:integer;col:byte;where:word);
 procedure Line (a,b,c,d:integer;col:byte;where:word);
 procedure Putpixel (X,Y : Integer; Col : Byte; where:word);
 function Getpixel (X,Y : Integer; where:word) :Byte;
@@ -170,29 +169,56 @@ end;
 
 {****************************************************************************}
 
-procedure Hline (x1,x2,y:word;col:byte;where:word); assembler;
+function KeyHit:boolean;
+{ True if a key has been pressed. Unlike Crt.KeyPressed, which only peeks,
+  the keys are read from the BIOS keyboard buffer, so they are not left for
+  DOS when the demo exits. }
+var hit : boolean;
+begin
+  hit := false;
+  asm
+  @next:
+    mov     ah, 01h               { key in the buffer? }
+    int     16h
+    jz      @done
+    xor     ah, ah                { read it (extended keys too) }
+    int     16h
+    mov     [hit], 1
+    jmp     @next
+  @done:
+  end;
+  KeyHit := hit;
+end;
+
+{****************************************************************************}
+
+procedure Hline (x1,x2,y:integer;col:byte;where:word); assembler;
+{ Fills pixels x1..x2-1 on row y. The span is half-open, so polygons sharing
+  an edge don't both draw it. Nothing is drawn if x2<=x1. }
 asm
+  mov     cx, [x2]
+  sub     cx, [x1]
+  jle     @exit                   { empty or reversed span }
   mov     es, [where]
   mov     bx, [y]
   add     bx, bx
   mov     di, word ptr [screen_offset + bx]
   add     di, [x1]
-  mov     al, col
+  mov     al, [col]
   mov     ah, al
-  mov     cx, x2
-  sub     cx, x1
   shr     cx, 1
-  jnc     @start
+  jnc     @words
   stosb
-@Start:
+@words:
   rep     stosw
+@exit:
 end;
 
 {****************************************************************************}
 
 procedure Line(a,b,c,d:integer;col:byte;where:word);
   { This draws a solid line from a,b to c,d in colour col }
-  function sgn(a:real):integer;
+  function sgn(a:integer):integer;
   begin
        if a>0 then sgn:=+1;
        if a<0 then sgn:=-1;
@@ -268,7 +294,12 @@ VAR f:file;
     pallette: Array[0..767] Of Byte;
 BEGIN
   assign (f,filename);
-  reset (f,1);
+  {$I-} reset (f,1); {$I+}
+  if IOResult<>0 then begin   { don't die with a runtime error in mode 13h }
+    settext;
+    writeln('Cannot open ',filename);
+    halt(1);
+  end;
   if dopal then BEGIN
     Seek(f,FileSize(f)-768);
     BlockRead(f,pallette,768);
@@ -296,6 +327,12 @@ BEGIN
     mov  cl,al
     and  cl,$3f
     lodsb
+    mov  bx,64000
+    sub  bx,di
+    cmp  cx,bx
+    jbe  @Run
+    mov  cx,bx              { don't write past the end of the buffer }
+@Run :
     rep  stosb
     jmp  @Fin
 @Single :

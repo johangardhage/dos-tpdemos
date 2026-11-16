@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       xst=1; yst=1; zst=1;
@@ -37,7 +37,7 @@ begin
       putpixel(xp[loop1],yp[loop1],10,vaddr);
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 begin

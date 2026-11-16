@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       xst=1; yst=1; zst=1;
@@ -95,7 +95,7 @@ begin
     end;
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 var loop1:integer;
@@ -103,7 +103,7 @@ begin
   initialize;
   setmcga;
   setupvirtual;
-  for loop1:=1 to 255 do pal(loop1,loop1-32,loop1-32,loop1-32);
+  for loop1:=1 to 31 do pal(loop1,loop1+32,loop1+32,loop1+32);
   mainloop;
   shutdownvirtual;
   settext;

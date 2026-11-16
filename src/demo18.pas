@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       xst=1; yst=1; zst=1;
@@ -41,7 +41,7 @@ begin
 
     quicksort(maxpolygons);
 
-    for loop1:=maxpolygons-maxvisible to maxpolygons do begin
+    for loop1:=maxpolygons-maxvisible+1 to maxpolygons do begin
       draw_4_glenz(xp[polygons[pind[loop1],1]],yp[polygons[pind[loop1],1]],
                    xp[polygons[pind[loop1],2]],yp[polygons[pind[loop1],2]],
                    xp[polygons[pind[loop1],3]],yp[polygons[pind[loop1],3]],
@@ -49,14 +49,15 @@ begin
     end;
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 var loop1:integer;
 begin
   setmcga;
   setupvirtual;
-  for loop1:=1 to 256 do pal(loop1,loop1 div 2,loop1 div 2,loop1 div 4);
+  { the ramp repeats from color 128: negative depths wrap around to there }
+  for loop1:=1 to 255 do pal(loop1,(loop1 div 2) and 63,(loop1 div 2) and 63,loop1 div 4);
   mainloop;
   shutdownvirtual;
   settext;

@@ -67,6 +67,7 @@ def target_parser(description, epilog):
         description=description,
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
+        allow_abbrev=False,
     )
 
 

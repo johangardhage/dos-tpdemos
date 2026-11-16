@@ -8,7 +8,7 @@
 
 program demonstration;
 
-uses crt,gfx,vector;
+uses gfx,vector;
 
 const border:boolean=false;
       NofPoints=300;
@@ -67,7 +67,7 @@ begin
     phiz:=(phiz+zst) and (maxdegrees-1);
 
     if border then setborder(0);
-  until keypressed;
+  until keyhit;
 end;
 
 var loop1:integer;
@@ -75,7 +75,7 @@ begin
   Init;
   setmcga;
   setupvirtual;
-  for loop1:=1 to 64 do pal(loop1,loop1,loop1,loop1);
+  for loop1:=1 to 64 do pal(loop1,loop1-1,loop1-1,loop1-1);
   mainloop;
   shutdownvirtual;
   settext;
